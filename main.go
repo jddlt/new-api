@@ -142,10 +142,11 @@ func main() {
 	store := cookie.NewStore([]byte(common.SessionSecret))
 	store.Options(sessions.Options{
 		Path:     "/",
-		MaxAge:   2592000, // 30 days
+		Domain:   ".mrpzx.cn", // 设置为顶级域名，允许子域名共享
+		MaxAge:   2592000,     // 30 days
 		HttpOnly: true,
-		Secure:   false,
-		SameSite: http.SameSiteStrictMode,
+		Secure:   false,       // 生产环境应该设置为true
+		SameSite: http.SameSiteLaxMode, // 允许跨域请求
 	})
 	server.Use(sessions.Sessions("session", store))
 
