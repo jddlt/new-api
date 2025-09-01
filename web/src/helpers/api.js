@@ -36,6 +36,16 @@ export let API = axios.create({
   },
 });
 
+// 请求拦截器：动态添加认证头
+API.interceptors.request.use((config) => {
+  // 获取用户token
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (user && user.token) {
+    config.headers.Authorization = `Bearer ${user.token}`;
+  }
+  return config;
+});
+
 function patchAPIInstance(instance) {
   const originalGet = instance.get.bind(instance);
   const inFlightGetRequests = new Map();
@@ -75,6 +85,16 @@ export function updateAPI() {
       'New-API-User': getUserIdFromLocalStorage(),
       'Cache-Control': 'no-store',
     },
+  });
+
+  // 请求拦截器：动态添加认证头
+  API.interceptors.request.use((config) => {
+    // 获取用户token
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user && user.token) {
+      config.headers.Authorization = `Bearer ${user.token}`;
+    }
+    return config;
   });
 
   patchAPIInstance(API);

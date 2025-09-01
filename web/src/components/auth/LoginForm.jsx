@@ -119,6 +119,16 @@ const LoginForm = () => {
       );
       const { success, message, data } = res.data;
       if (success) {
+        // 获取access token
+        try {
+          const tokenRes = await API.get('/api/user/token');
+          if (tokenRes.data.success) {
+            data.token = tokenRes.data.data;
+          }
+        } catch (tokenError) {
+          console.error('获取access token失败:', tokenError);
+        }
+
         userDispatch({ type: 'login', payload: data });
         localStorage.setItem('user', JSON.stringify(data));
         setUserData(data);
@@ -166,6 +176,7 @@ const LoginForm = () => {
           }
 
           userDispatch({ type: 'login', payload: data });
+          localStorage.setItem('user', JSON.stringify(data));
           setUserData(data);
           updateAPI();
           showSuccess('登录成功！');
@@ -212,6 +223,16 @@ const LoginForm = () => {
       const res = await API.get(`/api/oauth/telegram/login`, { params });
       const { success, message, data } = res.data;
       if (success) {
+        // 获取access token
+        try {
+          const tokenRes = await API.get('/api/user/token');
+          if (tokenRes.data.success) {
+            data.token = tokenRes.data.data;
+          }
+        } catch (tokenError) {
+          console.error('获取access token失败:', tokenError);
+        }
+
         userDispatch({ type: 'login', payload: data });
         localStorage.setItem('user', JSON.stringify(data));
         showSuccess('登录成功！');

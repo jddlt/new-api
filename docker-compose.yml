@@ -2,12 +2,12 @@ version: '3.4'
 
 services:
   new-api:
-    image: calciumion/new-api:latest
+    image: new-api:latest
     container_name: new-api
     restart: always
     command: --log-dir /app/logs
     ports:
-      - "3000:3000"
+      - "3002:3000"
     volumes:
       - ./data:/data
       - ./logs:/app/logs
@@ -45,8 +45,8 @@ services:
       MYSQL_DATABASE: new-api
     volumes:
       - mysql_data:/var/lib/mysql
-    # ports:
-    #   - "3306:3306"  # If you want to access MySQL from outside Docker, uncomment
+    ports:
+      - "3307:3306"  # Expose MySQL port for external service access (host:3307 -> container:3306)
 
 volumes:
   mysql_data:

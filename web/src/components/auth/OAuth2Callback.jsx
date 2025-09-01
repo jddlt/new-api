@@ -55,6 +55,16 @@ const OAuth2Callback = (props) => {
         showSuccess(t('绑定成功！'));
         navigate('/console/personal');
       } else {
+        // 获取access token
+        try {
+          const tokenRes = await API.get('/api/user/token');
+          if (tokenRes.data.success) {
+            data.token = tokenRes.data.data;
+          }
+        } catch (tokenError) {
+          console.error('获取access token失败:', tokenError);
+        }
+
         userDispatch({ type: 'login', payload: data });
         localStorage.setItem('user', JSON.stringify(data));
         setUserData(data);
